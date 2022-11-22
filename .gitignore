@@ -8,6 +8,7 @@ dist
 .cache
 logs/
 WWebJS/
+data/
 
 
 yarn.lock

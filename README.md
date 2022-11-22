@@ -40,7 +40,17 @@ ___
 
 ## Docker compose Localhost
 
+
+Compila, (re)cria, inicia e anexa um contêiner para um serviço:
+``` bash
+$ docker-compose up --build --no-start
+$ rm -rf ./izing/data && mkdir ./izing/data && mkdir ./izing/data/redis && mkdir ./izing/data/postgres
+$ docker-compose run --rm rails bundle exec rails db:chatwoot_prepare
+$ docker compose up
+```
+
 Execute comando na pasta raiz do projeto (izing.io)
+
 ```
 docker compose -f "docker-compose.yml" up -d --build
 ```

@@ -1,66 +1,84 @@
 version: '3'
 
 services:
-  
+
   fixPermissionsPostregres:
     image: 'postgres:14'
     user: root
     command: chown -R 1001:1001 /var/lib/postgresql
     volumes:
-      - '$HOME/www/izing/database/pg:/var/lib/postgresql'
+      - ./izing/data/postgres:/var/lib/postgresql
   
-  izing-db:
+  izing-postgres:
     image: 'postgres:14'
+    container_name: izing-postgres
+    hostname: izing-postgres
     restart: always
-    container_name: "izing-db"
+    stdin_open: true
+    tty: true
     env_file:
       - ./backend/.env
     volumes:
-      - "$HOME/www/izing/database/pg:/var/lib/postgresql"
-    ports:
-      - "5432:5432"
-    networks:
-      - db_network
+      - ./izing/data/postgres:/var/lib/postgresql
     depends_on:
       - fixPermissionsPostregres
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - izing-network
+  
+  izing-pgadmin4:
+    image: dpage/pgadmin4:latest
+    container_name: izing-pgadmin4
+    hostname: izing-pgadmin4
+    restart: always
+    stdin_open: true
+    tty: true
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "admin@izing.io"
+      PGADMIN_DEFAULT_PASSWORD: "PgAdmin2021!"
+    depends_on:
+      - izing-postgres
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - izing-network
 
   izing-redis:
-    container_name: "izing-redis"
-    image: 'redis:latest'
+    image: redis:alpine
+    container_name: izing-redis
+    hostname: izing-redis
     restart: always
-    ports:
-      - "6379:6379"
-    env_file:
-      - ./backend/.env
+    stdin_open: true
+    tty: true
+    env_file: ./backend/.env
     volumes:
-      - '$HOME/www/izing/database/redis:/data'
+      - ./izing/data/redis:/data
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     networks:
-      - redis_network
+      - izing-network
   
   izing-rabbitmq:
     image: rabbitmq:3-management
-    container_name: "izing-rabbitmq"
+    container_name: izing-rabbitmq
+    hostname: izing-rabbitmq
     restart: always
+    stdin_open: true
+    tty: true
     env_file:
       - ./backend/.env
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    # healthcheck:
-    #   test: [ "CMD", "nc", "-z", "localhost", "5672" ]
-    #   interval: 5s
-    #   timeout: 10s
-    #   retries: 3
     volumes:
-      - $HOME/www/izing/database/rabbitmq/data/:/var/lib/rabbitmq/
-      - $HOME/www/izing/database/rabbitmq/logs/:/var/log/rabbitmq/log
-    ports:
-      - 5672:5672
-      - 15672:15672
+      - ./izing/data/rabbitmq/data/:/var/lib/rabbitmq/
+      - ./izing/data/rabbitmq/logs/:/var/log/rabbitmq/log
     networks:
-      - rabbitmq_network
+      - izing-network
 
   izing-backend:
-    container_name: "izing-backend"
+    container_name: izing-backend
+    hostname: izing-backend
     build:
       context: ./backend
     env_file:
@@ -68,54 +86,53 @@ services:
     restart: always
     stdin_open: true
     tty: true
-    ports:
-      - 3100:3100
-      - 3000:3000
+    # ports:
+      # - 3100:3100
+      # - 3000:3000
     # command: /start_production
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
       - "./backend:/usr/src/app"
-      - $HOME/www/izing/media:/usr/src/app/public
+      - ./izing/media:/usr/src/app/public
     networks:
-      - rabbitmq_network
-      - redis_network
-      - db_network
-      - nginx_network
+      - izing-network
     depends_on:
       - izing-redis
-      - izing-db
+      - izing-postgres
       - izing-rabbitmq
+    # command: ['npx', 'exec', 'npm', 's', '-p', '3000', '-b', '0.0.0.0']
   
-  nginx:
-    container_name: nginx-proxy
+  izing-nginx:
+    container_name: izing-nginx
+    hostname: izing-nginx
     build:
-      context: .
+      context: ./nginx
+      dockerfile: Dockerfile
       # args:
       #   - DOMINIO_CLIENTE=${DOMINIO_CLIENTE}
-    restart: always
-    stdin_open: true
-    tty: true
     entrypoint: nginx -g "daemon off;"
     ports:
-      - "443:443"
-      - "80:80"
-      - "8080:8080"
+      - "8080:8080" #chatwoot
+      # - "8081:8081" #wppconnect
+      - "8082:8082" #pgadmin
+      - "8083:8083" #redis
+      - "8090:8090" #backend
+      # - "5672:5672" #rabbitmq
+      # - "15672:15672" #rabbitmq
     volumes:
-      - $HOME/www/izing/media:/opt/services/app/media
+      - ./izing/media:/opt/services/app/media
     depends_on:
+      - izing-postgres
+      - izing-pgadmin4
+      - izing-redis
+      - izing-rabbitmq
       - izing-backend
     networks:
-      - nginx_network
-
-
+      - izing-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
 networks:
-  db_network:
-    driver: bridge
-  redis_network:
-    driver: bridge
-  rabbitmq_network:
-    driver: bridge
-  nginx_network:
+  izing-network:
     driver: bridge
