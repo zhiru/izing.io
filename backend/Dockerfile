@@ -35,8 +35,9 @@ COPY ./start_production /start_production
 RUN sed -i 's/\r$//g' /start_production
 RUN chmod +x /start_production
 
+# ENTRYPOINT ["dumb-init", "--"]
 
-ENTRYPOINT ["dumb-init", "--"]
+#CMD npx sequelize db:migrate \
+#  && node dist/server.js
 
-CMD npx sequelize db:migrate \
-  && node dist/server.js
+CMD node dist/server.js

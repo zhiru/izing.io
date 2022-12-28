@@ -29,3 +29,7 @@ WWebJS/
 
 backend/newrelic_agent.log
 newrelic_agent.log
+
+.php-ini
+.php-version
+index.html
