@@ -18,7 +18,12 @@ No front, todas as funcionalidades são baseadas no [vue](https://vuejs.org/) e 
 
 Esse projeto tem inspiração e também é baseado no projeto fantástico [whaticket](https://github.com/canove/whaticket-community).
 
+<<<<<<< HEAD
 **IMPORTANTE**: não garantimos que a utilização desta ferramenta não irá gerar bloqueio nas contas utilizadas. São bots que em sua maioria utilizam APIs secundarias para comunicação com os fornecedores dos serviços. Use com responsabilidade!
+=======
+
+**IMPORTANTE**: não garantimos que a utilização desta ferramenta não irá gerar bloqueio nas contas utilizadas. São bots que em sua maioria utilizam APIs segundarias para comunicação com os fornecedores dos serviços. Use com responsabilidade!
+>>>>>>> 50ff0668391911f25714997d16d3c05a6b99dcec
 
 ## Screenshots
 
@@ -41,6 +46,15 @@ ___
 
 ## Docker compose Localhost
 
+
+Compila, (re)cria, inicia e anexa um contêiner para um serviço:
+``` bash
+$ docker-compose up --build --no-start
+$ rm -rf ./izing/data && mkdir ./izing/data && mkdir ./izing/data/redis && mkdir ./izing/data/postgres
+$ docker-compose run --rm rails bundle exec rails db:chatwoot_prepare
+$ docker compose up
+```
+
 Execute comando na pasta raiz do projeto (izing.io)
 
 ```
@@ -59,6 +73,7 @@ docker compose exec -it izing-backend  bash -c 'npx sequelize db:seed:all'
 usuário: admin@izing.io
 senha: 123456
 ```
+<<<<<<< HEAD
 
 ## Instalação (Linux Ubuntu - Desenvolvimento)
 
@@ -70,80 +85,49 @@ Instale node 14.* via nvm
 ```
 
 Install puppeteer dependencies:
+=======
+## Deploy Ubuntu
+>>>>>>> 50ff0668391911f25714997d16d3c05a6b99dcec
 
 ```bash
-sudo apt-get install -y libgbm-dev wget unzip fontconfig locales gconf-service libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils
+  sudo apt-get install -y libgbm-dev wget unzip fontconfig locales gconf-service libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils git
 ```
 
-Clone este repositório
+Instalar Python (precisa para o build do frontend):
 
 ```bash
-git clone git@github.com:ldurans/izing.io.git
+sudo apt-add-repository universe
+sudo apt update
+sudo apt install python2-minimal
 ```
 
-Navegue até a pasta backend e crie o arquivo .env:
+Instalar o pacote  build-essential:
 
 ```bash
-cp .env.example .env
-nano .env
+sudo apt-get install build-essential
 ```
-
-Edite os valores das variáveis do arquivo `.env`:
 
 ```bash
-NODE_ENV=DEVELOPMENT #it helps on debugging
-BACKEND_URL=http://localhost
-FRONTEND_URL=https://localhost:3000
-PROXY_PORT=8080
-PORT=8080
-
-POSTGRES_HOST=
-DB_PORT=
-POSTGRES_DB=
-POSTGRES_USER=
-POSTGRES_PASSWORD=
-
-JWT_SECRET=ainjpansaiubspiusbpsjp918921601826
-JWT_REFRESH_SECRET=ain@@@@jpansai_!0ubspiusbpsjp
-MIN_SLEEP_BUSINESS_HOURS=10000
-MAX_SLEEP_BUSINESS_HOURS=20000
-MIN_SLEEP_AUTO_REPLY=4000
-MAX_SLEEP_AUTO_REPLY=6000
-MIN_SLEEP_INTERVAL=2000
-MAX_SLEEP_INTERVAL=5000
-RABBITMQ_DEFAULT_USER=
-RABBITMQ_DEFAULT_PASS=
-AMQP_URL='amqp://USER:SENHAS@HOST:PORTA?connection_attempts=5&retry_delay=5'
-API_URL_360=https://waba-sandbox.360dialog.io
-ADMIN_DOMAIN=izing.io
-FACEBOOK_APP_ID=
-FACEBOOK_APP_SECRET_KEY=
-
+sudo apt update && sudo apt upgrade
 ```
 
-Instale as dependências do backend e execute as migrações e carga de dados iniciais:
+Instale o node (14.x) e confirme se o comando do node -v e npm -v está disponível:
 
 ```bash
-npm install
-npm run build
-npx sequelize db:migrate
-npx sequelize db:seed:all
+curl -fsSL https://deb.nodesource.com/setup_14.x | sudo -E bash -
+sudo apt-get install -y nodejs
+node -v
+npm -v
 ```
 
-Inicie o backend:
+Todas as instruções abaixo assumem que você NÃO está executando como root, pois vai dar erro no puppeteer. Então vamos começar a criar um novo usuário e conceder privilégios sudo a ele:
 
 ```bash
-npm start
+adduser deploy
+usermod -aG sudo deploy
 ```
 
-Abra um novo terminal e navegue até a pasta do frontend.
-
-Instale as dependências do backend e execute as migrações e carga de dados iniciais:
-
-```bash
-npm install
-```
-
+<<<<<<< HEAD
 Crie o arquivo .env na pasta frontend:
 
 ```bash
@@ -157,13 +141,28 @@ FACEBOOK_APP_ID='1554345554575413' # id do app criado na console do facebook
 ```
 
 Inicie o frontend (suponto que já possua instalado as cli do vue e quasar):
+=======
+Agora podemos fazer login com este novo usuário:
 
 ```bash
-quasar c && quasar d
+su deploy
 ```
-  
-## Guia básico para produção (Ubuntu >= 18.04 VPS)
 
+Instale o docker e adicione seu usuário ao grupo do docker:
+>>>>>>> 50ff0668391911f25714997d16d3c05a6b99dcec
+
+```bash
+sudo apt install apt-transport-https ca-certificates curl software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
+sudo apt update
+sudo apt install docker-ce
+sudo systemctl status docker
+sudo usermod -aG docker ${USER}
+su - ${USER}
+```
+
+<<<<<<< HEAD
 ```
 Instale o postgres;
 Instale o rabbitmq;
@@ -171,28 +170,26 @@ Instale o redis;
 ```
 
 As instruções assumem que não está executando como root. Vamos iniciar criando um usuário e as permissões necessárias.
+=======
+Instalar o Postgres Docker 
+>>>>>>> 50ff0668391911f25714997d16d3c05a6b99dcec
 
 ```bash
-adduser deploy
-usermod -aG sudo deploy
+docker run --name postgresql -e POSTGRES_USER=izing -e POSTGRES_PASSWORD=password -p 5432:5432 -v /data:/var/lib/postgresql/data -d postgres
 ```
 
-Faça login com o novo usuário:
+Instalar o Redis Docker 
 
 ```bash
-su deploy
+docker run -e TZ="America/Sao_Paulo" --name redis-izing -p 6379:6379 -d --restart=always redis:latest redis-server --appendonly yes --requirepass "password"
 ```
 
-> Para o front, recomendamos a utilização de serviços como Vercel e Netlify.
-
-Você vai precisar de dois subdomains encaminhados para o seu IP/VPS.
-Utilizaremos `myapp.mydomain.com` para o frontend e `api.mydomain.com` para o backend para este exemplo.
-
-Atualize o sistema (SO):
+Instalar o Redis RabbitMQ 
 
 ```bash
-sudo apt update && sudo apt upgrade
+docker run -d --name rabbitmq -p 5672:5672 -p 15672:15672 --restart=always --hostname rabbitmq -v /data:/var/lib/rabbitmq rabbitmq:3-management-alpine
 ```
+<<<<<<< HEAD
 
 Instale o node:
 
@@ -206,13 +203,17 @@ npm -v
 > `Assumiremos que você já possui o Postgres instalado e o banco criado.`
 
 Clone o repositório:
+=======
+ 
+ Clonar este repositório:
+>>>>>>> 50ff0668391911f25714997d16d3c05a6b99dcec
 
 ```bash
-cd  ~
-git clone git@github.com:ldurans/izing.io.git
+cd ~
+git clone https://github.com/zhir/izing.io.git izing
 ```
 
-Na pasta backend, crie o arquivo .env:
+Crie um arquivo .env de backend e preencha com as informações correta:
 
 ```bash
 cp izing/backend/.env.example izing/backend/.env
@@ -220,100 +221,115 @@ nano izing/backend/.env
 ```
 
 ```bash
-NODE_ENV=
-BACKEND_URL=https://api.mydomain.com #USE HTTPS HERE, WE WILL ADD SSL LATTER
-FRONTEND_URL=https://myapp.mydomain.com #USE HTTPS HERE, WE WILL ADD SSL LATTER, CORS RELATED!
-PROXY_PORT=443 #USE NGINX REVERSE PROXY PORT HERE, WE WILL CONFIGURE IT LATTER
-PORT=8080
+NODE_ENV=prod
+BACKEND_URL=https://api.mydomain.com      #USE HTTPS HERE, WE WILL ADD SSL LATTER
+FRONTEND_URL=https://myapp.mydomain.com   #USE HTTPS HERE, WE WILL ADD SSL LATTER, CORS RELATED!
+PROXY_PORT=443                            #USE NGINX REVERSE PROXY PORT HERE, WE WILL CONFIGURE IT LATTER
+PORT=3000
 
 DB_DIALECT=postgres
 DB_PORT=5432
-POSTGRES_HOST=
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=
+POSTGRES_HOST=localhost
+POSTGRES_USER=izing
+POSTGRES_PASSWORD=password
 POSTGRES_DB=izing
+
 IO_REDIS_SERVER=localhost
+IO_REDIS_PASSWORD=password
 IO_REDIS_PORT='6379'
 IO_REDIS_DB_SESSION='2'
-JWT_SECRET=DPHmNRZ!!@56WZ4isLF9vXkMv1QabvpcA80Rc
-JWT_REFRESH_SECRET=EMPehEbr908879Adi7s8fGSeYzqGQbV5wrjH4i
-MIN_SLEEP_BUSINESS_HOURS=10000
-MAX_SLEEP_BUSINESS_HOURS=20000
-MIN_SLEEP_AUTO_REPLY=4000
-MAX_SLEEP_AUTO_REPLY=6000
-MIN_SLEEP_INTERVAL=2000
-MAX_SLEEP_INTERVAL=5000RABBITMQ_DEFAULT_USER=durans
-RABBITMQ_DEFAULT_PASS=marina0509
-AMQP_URL='amqp://USER:SENHAS@HOST:PORTA?connection_attempts=5&retry_delay=5'
-API_URL_360=https://waba-sandbox.360dialog.io
 
+# dados do RabbitMQ / Para não utilizar, basta comentar a var
+#RABBITMQ_DEFAULT_USER=admin
+#RABBITMQ_DEFAULT_PASS=123456
+AMQP_URL='amqp://:5672?connection_attempts=5&retry_delay=5'
+
+# Dados para utilização do canal do facebook
 FACEBOOK_APP_ID=
 FACEBOOK_APP_SECRET_KEY=
 
+ADMIN_DOMAIN=https://admin.mydomain.com
+
+
+JWT_SECRET=DPHmNRZWZ4isLF9vXkMv1QabvpcA80Rc
+JWT_REFRESH_SECRET=EMPehEbrAdi7s8fGSeYzqGQbV5wrjH4i
 ```
 
-Instale as dependências do puppeteer:
-
-```bash
-sudo apt-get install -y libgbm-dev wget unzip fontconfig locales gconf-service libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils
-```
-
-Instale as dependências do backend e execute as migrações e carga de dados iniciais:
+Executa o npm install (com a flag --force), cria o build cria as tabela e insere os registro padrão
 
 ```bash
 cd izing/backend
-npm install
+npm install --force
 npm run build
-npx sequelize db:migrate
-npx sequelize db:seed:all
+npm run db:migrate
+npm run db:seed
 ```
 
+<<<<<<< HEAD
 Instale o pm2 **com sudo**, e inicie o backend com ele:
-
-```bash
-sudo npm install -g pm2
-pm2 start dist/server.js --name izing-backend
-```
-
-Após isso, faça o pm2 auto iniciar:
-
-```bash
-pm2 startup ubuntu -u `YOUR_USERNAME`
-```
-
-Copie a última saída do terminal e a execute. O camando deverá ser parecido com:
-
-```bash
-sudo env PATH=\$PATH:/usr/bin pm2 startup ubuntu -u YOUR_USERNAME --hp /home/YOUR_USERNAM
-```
-
-Agora vamos preparar o frontend.
+=======
+Vá para a pasta frontend e instale as dependências:
+>>>>>>> 50ff0668391911f25714997d16d3c05a6b99dcec
 
 ```bash
 cd ../frontend
 npm install
-```
-
-Crie o arquivo .env na pasta frontend:
-
-```bash
 cp .env.example .env
 nano .env
 ```
 
 ```bash
-URL_API='http://api.mydomain.com' # URL do backend
-FACEBOOK_APP_ID='1554345554575413' # id do app criado na console do facebook
+URL_API='https://api.mydomain.com'
+FACEBOOK_APP_ID=''
 ```
-
-Faça o build do front:
 
 ```bash
+
+npm i -g @quasar/cli
 quasar build -P -m pwa
+
 ```
 
-___
-___
+<<<<<<< HEAD
+Agora vamos preparar o frontend.
+=======
+se você não deseja instalar o quasar cli
+>>>>>>> 50ff0668391911f25714997d16d3c05a6b99dcec
+
+```bash
+
+npx quasar build -P -m pwa
+
+```
+
+Instale o pm2 **com sudo** e inicie o backend com ele:
+
+```bash
+sudo npm install -g pm2
+
+cd ../backend
+pm2 start dist/server.js --name izing-backend
+
+```
+
+<<<<<<< HEAD
+=======
+Iniciar pm2 após a reinicialização:
+
+>>>>>>> 50ff0668391911f25714997d16d3c05a6b99dcec
+```bash
+pm2 startup ubuntu -u `YOUR_USERNAME`
+```
+
+<<<<<<< HEAD
+Faça o build do front:
+=======
+Copie a última saída de linha do comando anterior e execute-o, é algo como:
+>>>>>>> 50ff0668391911f25714997d16d3c05a6b99dcec
+
+```bash
+sudo env PATH=\$PATH:/usr/bin pm2 startup ubuntu -u YOUR_USERNAME --hp /home/YOUR_USERNAM
+```
 
 Instale o nginx:
 
@@ -338,13 +354,24 @@ server {
   server_name api.mydomain.com;
 
   location / {
-    proxy_pass http://127.0.0.1:8080;
-......
+    proxy_pass http://127.0.0.1:3000;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection 'upgrade';
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_cache_bypass $http_upgrade;
+  }
 }
-
 ```
 
+<<<<<<< HEAD
 Crie o site para o Front
+=======
+Crie o site para o frontend
+>>>>>>> 50ff0668391911f25714997d16d3c05a6b99dcec
 
 ```bash
 sudo nano /etc/nginx/sites-available/izing-frontend
@@ -354,7 +381,7 @@ sudo nano /etc/nginx/sites-available/izing-frontend
 server {
   server_name myapp.mydomain.com;
   
-  root /home/user/izing/frontend/dist/pwa; # caminho da pasta dist/pwa
+  root /you/path/frontend/dist/pwa; # caminho da pasta dist/pwa
   
   add_header X-Frame-Options "SAMEORIGIN";
   add_header X-XSS-Protection "1; mode=block";

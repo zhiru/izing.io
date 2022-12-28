@@ -27,6 +27,8 @@ RUN npm install
 
 COPY . .
 RUN npm run build
+# RUN npm run db:migrate
+# RUN npm run db:seed
 
 ENV NODE_ENV=production
 ENV CHROME_BIN=google-chrome-stable
@@ -35,9 +37,12 @@ COPY ./start_production /start_production
 RUN sed -i 's/\r$//g' /start_production
 RUN chmod +x /start_production
 
+# RUN npm install -g pm2
+# RUN pm2 start dist/server.js
+
 # ENTRYPOINT ["dumb-init", "--"]
 
-#CMD npx sequelize db:migrate \
-#  && node dist/server.js
+# CMD npx sequelize db:migrate \
+  # && node dist/server.js
 
 CMD node dist/server.js
